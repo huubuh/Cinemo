@@ -25,8 +25,9 @@ import java.nio.charset.StandardCharsets;
 public class SecurityConfig {
 
     private static final String[] PUBLIC_ENDPOINTS = {
-            "/auth/register", "/auth/login", "/auth/refresh", "/auth/logout",
-            "/auth/forgot-password", "/auth/reset-password", "/error"
+            "/auth/register", "/auth/verify-email", "/auth/resend-verification",
+            "/auth/login", "/auth/refresh", "/auth/logout",
+            "/auth/forgot-password", "/auth/reset-password", "/auth/google", "/error"
     };
 
     @Bean

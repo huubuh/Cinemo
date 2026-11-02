@@ -1,9 +1,9 @@
 package com.moviebooking.backend.service.impl;
 
-import com.moviebooking.backend.model.PasswordResetOtp;
+import com.moviebooking.backend.model.EmailOtp;
 import com.moviebooking.backend.service.EmailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.mail.autoconfigure.MailProperties;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -12,18 +12,17 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
     private final JavaMailSender mailSender;
-    @Value("${spring.mail.username}")
-    private String from;
+    private final MailProperties mailProperties;
 
     @Override
-    public void sendPasswordResetOtp(String email, String otp) {
+    public void sendOtp(String email, String otp, String purpose) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(from);
+        message.setFrom(mailProperties.getUsername());
         message.setTo(email);
-        message.setSubject("Cinemo - Mã OTP đặt lại mật khẩu");
-        message.setText("Mã OTP đặt lại mật khẩu của bạn là: " + otp
-                + "\nMã có hiệu lực trong " + PasswordResetOtp.TTL.toMinutes() + " phút và chỉ sử dụng được một lần."
-                + "\nNếu bạn không yêu cầu đặt lại mật khẩu, hãy bỏ qua email này.");
+        message.setSubject("Cinemo - Mã OTP " + purpose);
+        message.setText("Mã OTP " + purpose + " của bạn là: " + otp
+                + "\nMã có hiệu lực trong " + EmailOtp.TTL.toMinutes() + " phút và chỉ sử dụng được một lần."
+                + "\nNếu bạn không yêu cầu " + purpose + ", hãy bỏ qua email này.");
         mailSender.send(message);
     }
 }
