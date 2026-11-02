@@ -1,5 +1,7 @@
 package com.moviebooking.backend.model;
 
+import com.moviebooking.backend.exception.AppException;
+import com.moviebooking.backend.exception.ErrorCode;
 import com.moviebooking.backend.model.enums.AccountStatus;
 import com.moviebooking.backend.model.enums.Role;
 import jakarta.persistence.*;
@@ -16,8 +18,10 @@ import java.time.LocalDate;
 public class User extends BaseEntity {
     @Column(nullable = false, unique = true, length = 254)
     private String email;
-    @Column(nullable = false)
     private String passwordHash;
+    private boolean emailVerified;
+    @Column(unique = true)
+    private String googleSubject;
     @Column(nullable = false)
     private String fullName;
     @Column(unique = true, length = 20)
@@ -34,4 +38,10 @@ public class User extends BaseEntity {
     private int loyaltyPoints;
     @ManyToOne(fetch = FetchType.LAZY)
     private Cinema cinema;
+
+    public void ensureActive() {
+        if (status != AccountStatus.ACTIVE) {
+            throw new AppException(ErrorCode.ACCOUNT_LOCKED);
+        }
+    }
 }

@@ -8,11 +8,11 @@ import java.time.Duration;
 import java.time.Instant;
 
 @Entity
-@Table(name = "password_reset_otps")
+@Table(name = "email_otps")
 @Getter
 @Setter
 @NoArgsConstructor
-public class PasswordResetOtp extends BaseEntity {
+public class EmailOtp extends BaseEntity {
     public static final Duration TTL = Duration.ofMinutes(5);
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)

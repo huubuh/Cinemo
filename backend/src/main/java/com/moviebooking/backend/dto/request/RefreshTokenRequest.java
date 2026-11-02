@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public record RefreshTokenRequest(
 
-        @NotBlank(message = "Refresh token không được để trống")
+        @NotBlank(message = "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại")
         String refreshToken
 
 ) {}

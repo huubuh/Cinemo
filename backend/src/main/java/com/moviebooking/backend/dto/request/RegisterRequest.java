@@ -12,7 +12,6 @@ public record RegisterRequest(
         @Size(max = 254, message = "Email tối đa 254 ký tự")
         String email,
 
-        // BCrypt chỉ dùng 72 byte đầu của mật khẩu
         @NotBlank(message = "Mật khẩu không được để trống")
         @Size(min = 8, max = 72, message = "Mật khẩu phải từ 8 đến 72 ký tự")
         String password,
