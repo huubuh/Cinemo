@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,6 +38,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers("/admin/movies", "/admin/movies/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/movies", "/movies/*", "/categories", "/categories/*").permitAll()
+                        .requestMatchers("/movies", "/movies/**", "/categories", "/categories/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
@@ -69,7 +73,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Đổi claim "role" (CUSTOMER/STAFF/ADMIN) thành quyền ROLE_CUSTOMER/ROLE_STAFF/ROLE_ADMIN
+    // Lấy vai trò (khách, nhân viên, admin) từ token để phân quyền
     private JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
         authoritiesConverter.setAuthoritiesClaimName("role");
