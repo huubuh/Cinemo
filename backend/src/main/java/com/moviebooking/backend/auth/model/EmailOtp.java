@@ -1,0 +1,28 @@
+package com.moviebooking.backend.auth.model;
+
+import com.moviebooking.backend.common.model.BaseEntity;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import java.time.Duration;
+import java.time.Instant;
+
+@Entity
+@Table(name = "email_otps")
+@Getter
+@Setter
+@NoArgsConstructor
+public class EmailOtp extends BaseEntity {
+    public static final Duration TTL = Duration.ofMinutes(5);
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(unique = true)
+    private User user;
+    @Column(length = 64)
+    private String otpHash;
+    private Instant expiresAt;
+    private int failedAttempts;
+    private Instant lastSentAt;
+}
