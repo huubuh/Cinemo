@@ -34,7 +34,16 @@ public enum ErrorCode {
     ROOM_NOT_FOUND(1302, "Không tìm thấy phòng chiếu", HttpStatus.NOT_FOUND),
     ROOM_EXISTED(1303, "Tên phòng đã tồn tại trong rạp", HttpStatus.CONFLICT),
     INVALID_SEAT_LAYOUT(1304, "Sơ đồ ghế không hợp lệ: ghế nằm ngoài phòng hoặc chồng lên nhau", HttpStatus.BAD_REQUEST),
-    SEAT_LAYOUT_IN_USE(1305, "Không thể bỏ ghế đã được dùng cho suất chiếu, hãy chuyển ghế sang trạng thái bảo trì/khóa", HttpStatus.CONFLICT);
+    SEAT_LAYOUT_IN_USE(1305, "Không thể bỏ ghế đã được dùng cho suất chiếu, hãy chuyển ghế sang trạng thái bảo trì/khóa", HttpStatus.CONFLICT),
+
+    SHOWTIME_NOT_FOUND(1401, "Không tìm thấy suất chiếu", HttpStatus.NOT_FOUND),
+    SHOWTIME_OVERLAP(1402, "Phòng đã có suất chiếu trùng giờ (tính cả thời gian dọn phòng)", HttpStatus.CONFLICT),
+    MOVIE_NOT_SHOWABLE(1403, "Phim đang ẩn hoặc ngày chiếu nằm ngoài thời gian phát hành", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_AVAILABLE(1404, "Phòng chưa có sơ đồ ghế, đang bảo trì/đóng cửa hoặc rạp ngừng hoạt động", HttpStatus.BAD_REQUEST),
+    SHOWTIME_STARTED(1405, "Suất chiếu đã bắt đầu", HttpStatus.CONFLICT),
+    TICKET_PRICE_NOT_FOUND(1406, "Không tìm thấy bảng giá vé", HttpStatus.NOT_FOUND),
+    TICKET_PRICE_OVERLAP(1407, "Đã có bảng giá cùng loại ghế, loại màn hình và thứ trong khoảng ngày này", HttpStatus.CONFLICT),
+    INVALID_TICKET_PRICE_DATES(1408, "Ngày kết thúc phải từ ngày bắt đầu áp dụng trở đi", HttpStatus.BAD_REQUEST);
 
     private final int code;
     private final String message;

@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "ticket_prices")
@@ -19,7 +20,11 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class TicketPrice extends BaseEntity {
+    // Ghi qua cột ID; quan hệ JPA chỉ để giữ khóa ngoại
+    @Column(name = "cinema_id", nullable = false)
+    private UUID cinemaId;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "cinema_id", insertable = false, updatable = false)
     private Cinema cinema;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)

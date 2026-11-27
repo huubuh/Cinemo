@@ -40,9 +40,11 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/movies", "/movies/*", "/categories", "/categories/*",
-                                "/cinemas", "/cinemas/*", "/cinemas/*/rooms", "/rooms/*/layout").permitAll()
+                                "/cinemas", "/cinemas/*", "/cinemas/*/rooms", "/rooms/*/layout",
+                                "/showtimes", "/showtimes/*", "/showtimes/*/prices").permitAll()
                         .requestMatchers("/movies", "/movies/**", "/categories", "/categories/**",
-                                "/cinemas", "/cinemas/**", "/rooms/**").hasRole("ADMIN")
+                                "/cinemas", "/cinemas/**", "/rooms/**", "/showtimes", "/showtimes/**",
+                                "/ticket-prices", "/ticket-prices/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
