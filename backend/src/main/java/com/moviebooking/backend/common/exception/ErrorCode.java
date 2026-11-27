@@ -43,7 +43,9 @@ public enum ErrorCode {
     SHOWTIME_STARTED(1405, "Suất chiếu đã bắt đầu", HttpStatus.CONFLICT),
     TICKET_PRICE_NOT_FOUND(1406, "Không tìm thấy bảng giá vé", HttpStatus.NOT_FOUND),
     TICKET_PRICE_OVERLAP(1407, "Đã có bảng giá cùng loại ghế, loại màn hình và thứ trong khoảng ngày này", HttpStatus.CONFLICT),
-    INVALID_TICKET_PRICE_DATES(1408, "Ngày kết thúc phải từ ngày bắt đầu áp dụng trở đi", HttpStatus.BAD_REQUEST);
+    INVALID_TICKET_PRICE_DATES(1408, "Ngày kết thúc phải từ ngày bắt đầu áp dụng trở đi", HttpStatus.BAD_REQUEST),
+    ROOM_HAS_UPCOMING_SHOWTIMES(1409, "Phòng còn suất chiếu chưa kết thúc; hãy hủy các suất đó trước khi bỏ ghế hoặc đổi loại màn hình", HttpStatus.CONFLICT),
+    MOVIE_HAS_UPCOMING_SHOWTIMES(1410, "Phim còn suất chiếu chưa kết thúc không khớp thời lượng hoặc thời gian phát hành mới; hãy hủy các suất đó trước", HttpStatus.CONFLICT);
 
     private final int code;
     private final String message;
