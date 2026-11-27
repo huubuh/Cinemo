@@ -1,5 +1,7 @@
 package com.moviebooking.backend.common.model;
 
+import com.moviebooking.backend.common.exception.AppException;
+import com.moviebooking.backend.common.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,6 +31,15 @@ public abstract class BaseEntity {
     @Version
     @Setter(AccessLevel.NONE)
     private Long version;
+
+    public void checkVersion(Long expected) {
+        if (expected == null) {
+            throw new AppException(ErrorCode.INVALID_REQUEST);
+        }
+        if (!expected.equals(version)) {
+            throw new AppException(ErrorCode.CONCURRENT_UPDATE);
+        }
+    }
 
     @PrePersist
     protected void onCreate() {

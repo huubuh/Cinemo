@@ -28,7 +28,24 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(1202, "Không tìm thấy thể loại", HttpStatus.NOT_FOUND),
     CATEGORY_EXISTED(1203, "Tên thể loại đã tồn tại", HttpStatus.CONFLICT),
     CATEGORY_IN_USE(1204, "Thể loại đang được phim sử dụng", HttpStatus.CONFLICT),
-    INVALID_MOVIE_DATES(1205, "Ngày kết thúc phải từ ngày khởi chiếu trở đi", HttpStatus.BAD_REQUEST);
+    INVALID_MOVIE_DATES(1205, "Ngày kết thúc phải từ ngày khởi chiếu trở đi", HttpStatus.BAD_REQUEST),
+
+    CINEMA_NOT_FOUND(1301, "Không tìm thấy rạp", HttpStatus.NOT_FOUND),
+    ROOM_NOT_FOUND(1302, "Không tìm thấy phòng chiếu", HttpStatus.NOT_FOUND),
+    ROOM_EXISTED(1303, "Tên phòng đã tồn tại trong rạp", HttpStatus.CONFLICT),
+    INVALID_SEAT_LAYOUT(1304, "Sơ đồ ghế không hợp lệ: ghế nằm ngoài phòng hoặc chồng lên nhau", HttpStatus.BAD_REQUEST),
+    SEAT_LAYOUT_IN_USE(1305, "Không thể bỏ ghế đã được dùng cho suất chiếu, hãy chuyển ghế sang trạng thái bảo trì/khóa", HttpStatus.CONFLICT),
+
+    SHOWTIME_NOT_FOUND(1401, "Không tìm thấy suất chiếu", HttpStatus.NOT_FOUND),
+    SHOWTIME_OVERLAP(1402, "Phòng đã có suất chiếu trùng giờ (tính cả thời gian dọn phòng)", HttpStatus.CONFLICT),
+    MOVIE_NOT_SHOWABLE(1403, "Phim đang ẩn hoặc ngày chiếu nằm ngoài thời gian phát hành", HttpStatus.BAD_REQUEST),
+    ROOM_NOT_AVAILABLE(1404, "Phòng chưa có sơ đồ ghế, đang bảo trì/đóng cửa hoặc rạp ngừng hoạt động", HttpStatus.BAD_REQUEST),
+    SHOWTIME_STARTED(1405, "Suất chiếu đã bắt đầu", HttpStatus.CONFLICT),
+    TICKET_PRICE_NOT_FOUND(1406, "Không tìm thấy bảng giá vé", HttpStatus.NOT_FOUND),
+    TICKET_PRICE_OVERLAP(1407, "Đã có bảng giá cùng loại ghế, loại màn hình và thứ trong khoảng ngày này", HttpStatus.CONFLICT),
+    INVALID_TICKET_PRICE_DATES(1408, "Ngày kết thúc phải từ ngày bắt đầu áp dụng trở đi", HttpStatus.BAD_REQUEST),
+    ROOM_HAS_UPCOMING_SHOWTIMES(1409, "Phòng còn suất chiếu chưa kết thúc; hãy hủy các suất đó trước khi bỏ ghế hoặc đổi loại màn hình", HttpStatus.CONFLICT),
+    MOVIE_HAS_UPCOMING_SHOWTIMES(1410, "Phim còn suất chiếu chưa kết thúc không khớp thời lượng hoặc thời gian phát hành mới; hãy hủy các suất đó trước", HttpStatus.CONFLICT);
 
     private final int code;
     private final String message;

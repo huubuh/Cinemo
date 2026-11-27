@@ -1,11 +1,13 @@
 package com.moviebooking.backend.movie.service.impl;
 
+import com.moviebooking.backend.movie.dto.event.MovieScheduleChangingEvent;
 import com.moviebooking.backend.movie.dto.request.MovieRequest;
 import com.moviebooking.backend.movie.dto.request.MovieVisibilityRequest;
 import com.moviebooking.backend.movie.dto.response.MovieResponse;
 import com.moviebooking.backend.common.dto.response.PageResponse;
 import com.moviebooking.backend.common.exception.AppException;
 import com.moviebooking.backend.common.exception.ErrorCode;
+import com.moviebooking.backend.common.util.TimeUtils;
 import com.moviebooking.backend.movie.mapper.MovieMapper;
 import com.moviebooking.backend.movie.model.Category;
 import com.moviebooking.backend.movie.model.Movie;
@@ -15,12 +17,13 @@ import com.moviebooking.backend.movie.repository.MovieRepository;
 import com.moviebooking.backend.movie.repository.MovieSpecifications;
 import com.moviebooking.backend.movie.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,6 +34,7 @@ public class MovieServiceImpl implements MovieService {
     private final MovieRepository movieRepository;
     private final CategoryRepository categoryRepository;
     private final MovieMapper movieMapper;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public PageResponse<MovieResponse> list(String q, UUID categoryId, MovieShowingStatus status, Pageable pageable) {
@@ -79,9 +83,16 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     public MovieResponse update(UUID id, MovieRequest request) {
         Movie movie = find(id);
-        validateVersion(movie, request.version());
+        movie.checkVersion(request.version());
         validateDates(request);
         var categories = resolveCategories(request.categoryIds());
+        boolean durationChanged = movie.getDurationMinutes() != request.durationMinutes();
+        if (durationChanged || !request.releaseDate().equals(movie.getReleaseDate())
+                || !Objects.equals(request.endDate(), movie.getEndDate())) {
+            // Suất chiếu đã xếp dựa trên thời lượng và thời gian phát hành; module khác có thể chặn thay đổi
+            eventPublisher.publishEvent(new MovieScheduleChangingEvent(id, durationChanged,
+                    request.releaseDate(), request.endDate()));
+        }
         movieMapper.update(request, movie);
         movie.getCategories().clear();
         movie.getCategories().addAll(categories);
@@ -93,23 +104,15 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     public MovieResponse setVisibility(UUID id, MovieVisibilityRequest request) {
         Movie movie = find(id);
-        validateVersion(movie, request.version());
+        movie.checkVersion(request.version());
         movie.setActive(request.active());
         movieRepository.flush();
         return movieMapper.toResponse(movie, today());
     }
 
-    private void validateVersion(Movie movie, Long version) {
-        if (version == null) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
-        }
-        if (!version.equals(movie.getVersion())) {
-            throw new AppException(ErrorCode.CONCURRENT_UPDATE);
-        }
-    }
 
     private LocalDate today() {
-        return LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return TimeUtils.today();
     }
 
     private Movie find(UUID id) {
