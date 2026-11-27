@@ -28,7 +28,13 @@ public enum ErrorCode {
     CATEGORY_NOT_FOUND(1202, "Không tìm thấy thể loại", HttpStatus.NOT_FOUND),
     CATEGORY_EXISTED(1203, "Tên thể loại đã tồn tại", HttpStatus.CONFLICT),
     CATEGORY_IN_USE(1204, "Thể loại đang được phim sử dụng", HttpStatus.CONFLICT),
-    INVALID_MOVIE_DATES(1205, "Ngày kết thúc phải từ ngày khởi chiếu trở đi", HttpStatus.BAD_REQUEST);
+    INVALID_MOVIE_DATES(1205, "Ngày kết thúc phải từ ngày khởi chiếu trở đi", HttpStatus.BAD_REQUEST),
+
+    CINEMA_NOT_FOUND(1301, "Không tìm thấy rạp", HttpStatus.NOT_FOUND),
+    ROOM_NOT_FOUND(1302, "Không tìm thấy phòng chiếu", HttpStatus.NOT_FOUND),
+    ROOM_EXISTED(1303, "Tên phòng đã tồn tại trong rạp", HttpStatus.CONFLICT),
+    INVALID_SEAT_LAYOUT(1304, "Sơ đồ ghế không hợp lệ: ghế nằm ngoài phòng hoặc chồng lên nhau", HttpStatus.BAD_REQUEST),
+    SEAT_LAYOUT_IN_USE(1305, "Không thể bỏ ghế đã được dùng cho suất chiếu, hãy chuyển ghế sang trạng thái bảo trì/khóa", HttpStatus.CONFLICT);
 
     private final int code;
     private final String message;

@@ -23,7 +23,7 @@ public class Seat extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String rowLabel;
     private int seatNumber;
-    // Vị trí ghế trong sơ đồ phòng, đếm từ 0; ô trống là lối đi, ghế đôi chiếm 2 ô
+    // Vị trí trong sơ đồ, đếm từ 0; ghế đôi chiếm 2 ô
     private int rowIndex;
     private int columnIndex;
     @Enumerated(EnumType.STRING)

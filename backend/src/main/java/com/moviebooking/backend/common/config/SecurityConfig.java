@@ -38,9 +38,11 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                        .requestMatchers("/admin/movies", "/admin/movies/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/movies", "/movies/*", "/categories", "/categories/*").permitAll()
-                        .requestMatchers("/movies", "/movies/**", "/categories", "/categories/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/movies", "/movies/*", "/categories", "/categories/*",
+                                "/cinemas", "/cinemas/*", "/cinemas/*/rooms", "/rooms/*/layout").permitAll()
+                        .requestMatchers("/movies", "/movies/**", "/categories", "/categories/**",
+                                "/cinemas", "/cinemas/**", "/rooms/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())));
