@@ -6,6 +6,7 @@ import com.moviebooking.backend.movie.dto.response.MovieResponse;
 import com.moviebooking.backend.common.dto.response.PageResponse;
 import com.moviebooking.backend.common.exception.AppException;
 import com.moviebooking.backend.common.exception.ErrorCode;
+import com.moviebooking.backend.common.util.TimeUtils;
 import com.moviebooking.backend.movie.mapper.MovieMapper;
 import com.moviebooking.backend.movie.model.Category;
 import com.moviebooking.backend.movie.model.Movie;
@@ -19,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -79,7 +79,7 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     public MovieResponse update(UUID id, MovieRequest request) {
         Movie movie = find(id);
-        validateVersion(movie, request.version());
+        movie.checkVersion(request.version());
         validateDates(request);
         var categories = resolveCategories(request.categoryIds());
         movieMapper.update(request, movie);
@@ -93,23 +93,15 @@ public class MovieServiceImpl implements MovieService {
     @Transactional
     public MovieResponse setVisibility(UUID id, MovieVisibilityRequest request) {
         Movie movie = find(id);
-        validateVersion(movie, request.version());
+        movie.checkVersion(request.version());
         movie.setActive(request.active());
         movieRepository.flush();
         return movieMapper.toResponse(movie, today());
     }
 
-    private void validateVersion(Movie movie, Long version) {
-        if (version == null) {
-            throw new AppException(ErrorCode.INVALID_REQUEST);
-        }
-        if (!version.equals(movie.getVersion())) {
-            throw new AppException(ErrorCode.CONCURRENT_UPDATE);
-        }
-    }
 
     private LocalDate today() {
-        return LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh"));
+        return TimeUtils.today();
     }
 
     private Movie find(UUID id) {
